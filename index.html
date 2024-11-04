@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculator App</title>
+    <style>
+        /* Background styling */
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: radial-gradient(circle, #3b3f5c, #1c1f2e);
+            background-attachment: fixed;
+            color: #fff;
+            overflow: hidden;
+        }
+
+        /* Calculator container */
+        .calculator {
+            background-color: #333;
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.3);
+            width: 300px;
+            animation: fadeIn 1.2s ease-in-out;
+        }
+
+        /* Display styling */
+        .display {
+            background-color: #1c1f2e;
+            color: #00ffae;
+            padding: 20px;
+            border-radius: 10px;
+            font-size: 2em;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: right;
+            box-shadow: inset 0px 0px 5px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Button grid */
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        /* Button styling */
+        .btn {
+            background-color: #4a4f6b;
+            color: #fff;
+            padding: 20px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.5em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.1s, background-color 0.3s;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn:hover {
+            background-color: #606585;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        /* Special buttons */
+        .btn-operator {
+            background-color: #ff9500;
+        }
+
+        .btn-operator:hover {
+            background-color: #ffb347;
+        }
+
+        .btn-equal {
+            background-color: #0a84ff;
+            grid-column: span 2;
+        }
+
+        .btn-equal:hover {
+            background-color: #539bff;
+        }
+
+        .btn-clear {
+            background-color: #d32f2f;
+        }
+
+        .btn-clear:hover {
+            background-color: #ff5252;
+        }
+
+        .btn-zero {
+            grid-column: span 2;
+        }
+
+        /* Fade-in animation for calculator */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <div class="display" id="display">0</div>
+        <div class="buttons">
+            <button class="btn" onclick="appendNumber('1')">1</button>
+            <button class="btn" onclick="appendNumber('2')">2</button>
+            <button class="btn" onclick="appendNumber('3')">3</button>
+            <button class="btn btn-operator" onclick="chooseOperator('+')">+</button>
+            
+            <button class="btn" onclick="appendNumber('4')">4</button>
+            <button class="btn" onclick="appendNumber('5')">5</button>
+            <button class="btn" onclick="appendNumber('6')">6</button>
+            <button class="btn btn-operator" onclick="chooseOperator('-')">-</button>
+            
+            <button class="btn" onclick="appendNumber('7')">7</button>
+            <button class="btn" onclick="appendNumber('8')">8</button>
+            <button class="btn" onclick="appendNumber('9')">9</button>
+            <button class="btn btn-operator" onclick="chooseOperator('*')">×</button>
+            
+            <button class="btn btn-zero" onclick="appendNumber('0')">0</button>
+            <button class="btn btn-operator" onclick="chooseOperator('/')">÷</button>
+            <button class="btn btn-equal" onclick="calculate()">=</button>
+            <button class="btn btn-clear" onclick="clearDisplay()">C</button>
+        </div>
+    </div>
+    
+    <script>
+        let currentInput = '';
+        let operator = '';
+        let previousInput = '';
+
+        function appendNumber(number) {
+            currentInput += number;
+            updateDisplay(currentInput);
+        }
+
+        function chooseOperator(op) {
+            if (currentInput === '') return;
+            if (previousInput !== '') {
+                calculate();
+            }
+            operator = op;
+            previousInput = currentInput;
+            currentInput = '';
+        }
+
+        function calculate() {
+            if (currentInput === '' || previousInput === '') return;
+            let result;
+            const prev = parseFloat(previousInput);
+            const curr = parseFloat(currentInput);
+            
+            switch (operator) {
+                case '+':
+                    result = prev + curr;
+                    break;
+                case '-':
+                    result = prev - curr;
+                    break;
+                case '*':
+                    result = prev * curr;
+                    break;
+                case '/':
+                    result = prev / curr;
+                    break;
+                default:
+                    return;
+            }
+            
+            currentInput = result;
+            operator = '';
+            previousInput = '';
+            updateDisplay(result);
+        }
+
+        function clearDisplay() {
+            currentInput = '';
+            previousInput = '';
+            operator = '';
+            updateDisplay(0);
+        }
+
+        function updateDisplay(value) {
+            document.getElementById('display').innerText = value;
+        }
+    </script>
+</body>
+</html>
